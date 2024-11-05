@@ -20,3 +20,5 @@ ALTER TABLE tickets ADD CONSTRAINT fk_tickets_sellerid FOREIGN KEY (Seller_Id) R
 
 CREATE USER  admin@localhost IDENTIFIED BY zaq1@WSX;
 GRANT ALL  PRIVILEGES on kino.* to admin@localhost;
+
+ALTER TABLE clients ADD COLUMN `Password` VARCHAR(100) NOT NULL;

@@ -1,0 +1,114 @@
+body{
+    margin: 0;
+    background-color:#111; 
+    overflow: hidden;
+    color: white;
+}
+h1,h2{
+    text-align: center;
+    color: white;
+}
+table{
+    width: 90%;
+}
+tbody{
+    color: white;
+    tr>th{
+        border: 2px solid #222;
+    }
+    tr>td{
+        border: 2px solid #111;
+    }
+    tr:nth-child(even){
+        background-color:#333;
+    };
+    tr:nth-child(odd){
+        background-color:#444;
+    };
+}
+#explorer,#editor{
+    margin-top:10px;
+    display: flex;
+    align-items: center;
+    min-height: 25vh;
+    max-height: 50vh;
+    width: 100vw;
+    overflow: scroll;
+}
+#editor{
+    min-height: 30vh;
+    max-height: 50vh;
+    align-items: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    #editor-menu{
+        display: flex;
+    }
+    #editor-form{
+        width: 90%;
+    }
+
+}
+#table_listing{
+    overflow: scroll;
+    color: white;
+    height: 40vh;
+    width: 25vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    h2{
+        font-size: large;
+        width: 15vw;
+        text-align:center;
+        background-color:#444;
+        border: 2px solid #222;
+    };
+}
+#table_data{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    max-height: 40vh;
+    min-height: 40vh;
+    width: 75%;
+    overflow: scroll;
+    span{
+        font-size: large;
+        width: 15vw;
+        text-align:center;
+        background-color:#444;
+        border: 2px solid #222;
+    };
+}
+.table_to_read_selection_submit{
+    width: 100%;
+}
+input[type="submit"] {
+    width: 15vw;
+    margin: 2px;
+    background-color: #333; 
+    color: white; 
+    border: 2px solid #222; 
+    padding: 5px 20px; 
+    cursor: pointer; 
+    border-radius: 5px; 
+    transition: background-color,scale 0.3s ease, color 0.3s ease; 
+}
+
+input[type="submit"]:hover {
+    background-color: #444; 
+    color: #ddd; 
+    scale:1.05;
+}
+
+input[type="submit"]:active {
+    background-color: #555; 
+    border-color: #333; 
+}
+
+label{
+    color: white;
+}

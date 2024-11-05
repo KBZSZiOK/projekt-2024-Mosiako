@@ -34,11 +34,11 @@ INSERT INTO sessions (Id, Term, Room_Id, Film_Id, Empty_seat_count) VALUES
 (4, '2024-10-26 21:00:00', 4, 4, 40); -- The Conjuring in Room 4
 
 -- Insert Data into clients Table (Polish Names)
-INSERT INTO clients (Id, Name, Surname, Email) VALUES
-(1, 'Jan', 'Kowalski', 'jan.kowalski@example.com'),
-(2, 'Anna', 'Nowak', 'anna.nowak@example.com'),
-(3, 'Piotr', 'Wiśniewski', 'piotr.wisniewski@example.com'),
-(4, 'Maria', 'Wójcik', 'maria.wojcik@example.com');
+INSERT INTO clients (Id, Name, Surname, Email, Password) VALUES
+(1, 'Jan', 'Kowalski', 'jan.kowalski@example.com','pass123'),
+(2, 'Anna', 'Nowak', 'anna.nowak@example.com','pass123'),
+(3, 'Piotr', 'Wiśniewski', 'piotr.wisniewski@example.com','pass123'),
+(4, 'Maria', 'Wójcik', 'maria.wojcik@example.com','pass123');
 
 -- Insert Data into sellers Table (Polish Names)
 INSERT INTO sellers (Id, Name, Surname) VALUES
