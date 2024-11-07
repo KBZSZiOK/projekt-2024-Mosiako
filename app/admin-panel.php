@@ -12,62 +12,64 @@
 
     if(isset($_POST["selected_table_listing"])){
         $_SESSION["selected_table_listing"]=$_POST["selected_table_listing"];
+    }elseif(!isset($_POST["selected_table_listing"]) && !isset($_SESSION["selected_table_listing"])){
+        $_SESSION["selected_table_listing"] = 0;
     }
+    $_SESSION["selected_table_editor"] = $_SESSION["selected_table_listing"];   
     //set defaults
     if(isset($_POST["operation_type"])){$_SESSION["operation_type"]=$_POST["operation_type"];}else{if(!isset($_SESSION["operation_type"])){$_SESSION["operation_type"]="add";}}
     if(isset($_POST["operation_sent"])){$_SESSION["operation_sent"]=$_POST["operation_sent"];}else{if(!isset($_SESSION["operation_sent"])){$_SESSION["operation_sent"]=false;}}
-    $_SESSION["selected_table_editor"] = $_SESSION["selected_table_listing"];
+    
     //check for operation
     if($_SESSION["operation_sent"] == 1){
-        $_SESSION["operation_sent"] = 0;
-        //get columns of the table selected
-        $columns = (makeDBRequest("SELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '".getTableNameFromId($_SESSION["selected_table_editor"])."' AND TABLE_SCHEMA = 'kino';"));
-        //create column names for the query
-        $column_names_for_query = "";
-        foreach ($columns as $key => $value) {
-            if(($value["COLUMN_NAME"] !== "Id")){$column_names_for_query.=$value["COLUMN_NAME"].",";}
-        }
-        $column_names_for_query = rtrim($column_names_for_query, ",");
-        //create query headrer
-        $query_to_send = sprintf("INSERT INTO %s (%s) VALUES",getTableNameFromId($_SESSION["selected_table_editor"]),$column_names_for_query);
-        //check validity of the data and add it into the query
-        $recognized_data_types = 0;
-        $query_to_send .= "(";
-        echo"<br> columns: ";print_r($columns); echo"<br>";
-        print_r($_POST);
-        $i = 1;
-        foreach ($_POST as $key => $value) {
-            if($key != "operation_sent" && isset($_POST[$key])){ // skip 1st element as its from operation_sent
-                $recognized_data_types+=1;
-                if($columns[$i]["DATA_TYPE"] == "int" || $columns[$i]["DATA_TYPE"] === "bigint"){
-                    $query_to_send .= $value.",";
-                }
-                elseif($columns[$i]["DATA_TYPE"] == "datetime"){
-                    //      2024-11-05T13:26
-                    //      2024-10-26 21:00:00
-                    $value = explode("T",$value);
-                    $value = implode(" ",$value);
-                    $query_to_send .= "'".$value.":00',";
-                }
-                elseif($columns[$i]["DATA_TYPE"] == "varchar"){
-                    $query_to_send .= "'".$value."',";
-                }
-                else{
-                    echo $key." is unknown type ". $columns[$i]["DATA_TYPE"];
-                    $recognized_data_types-=1;
-                }
-                $i ++;
+        if($_SESSION["operation_type"] == "add"){
+            $_SESSION["operation_sent"] = 0;
+            //get columns of the table selected
+            $columns = (makeDBRequest("SELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '".getTableNameFromId($_SESSION["selected_table_editor"])."' AND TABLE_SCHEMA = 'kino';"));
+            //create column names for the query
+            $column_names_for_query = "";
+            foreach ($columns as $key => $value) {
+                if(($value["COLUMN_NAME"] !== "Id")){$column_names_for_query.=$value["COLUMN_NAME"].",";}
             }
-        }
-        $query_to_send = rtrim($query_to_send, ",");
-        $query_to_send .= ");";
-        printf("%s  %.2f",count($columns)-1,$recognized_data_types);
-        if (count($columns)-1 == $recognized_data_types){
-            //make query
-            //echo "query:        ".$query_to_send;
-            makeDBRequest($query_to_send);
-        }else{
-            echo "incorrect amount of data";
+            $column_names_for_query = rtrim($column_names_for_query, ",");
+            //create query headrer
+            $query_to_send = sprintf("INSERT INTO %s (%s) VALUES",getTableNameFromId($_SESSION["selected_table_editor"]),$column_names_for_query);
+            //check validity of the data and add it into the query
+            $recognized_data_types = 0;
+            $query_to_send .= "(";
+            echo"<br> columns: ";print_r($columns); echo"<br>";
+            $i = 1;
+            foreach ($_POST as $key => $value) {
+                if($key != "operation_sent" && isset($_POST[$key])){ // skip 1st element as its from operation_sent
+                    $recognized_data_types+=1;
+                    if($columns[$i]["DATA_TYPE"] == "int" || $columns[$i]["DATA_TYPE"] === "bigint"){
+                        $query_to_send .= $value.",";
+                    }
+                    elseif($columns[$i]["DATA_TYPE"] == "datetime"){
+                        $value = explode("T",$value);
+                        $value = implode(" ",$value);
+                        $query_to_send .= "'".$value.":00',";
+                    }
+                    elseif($columns[$i]["DATA_TYPE"] == "varchar"){
+                        $query_to_send .= "'".$value."',";
+                    }
+                    else{
+                        echo $key." is unknown type ". $columns[$i]["DATA_TYPE"];
+                        $recognized_data_types-=1;
+                    }
+                    $i ++;
+                }
+            }
+            $query_to_send = rtrim($query_to_send, ",");
+            $query_to_send .= ");";
+            printf("%s  %.2f",count($columns)-1,$recognized_data_types);
+            if (count($columns)-1 == $recognized_data_types){
+                //make query
+                //echo "query:        ".$query_to_send;
+                makeDBRequest($query_to_send);
+            }else{
+                echo "incorrect amount of data";
+            }
         }
     }
     //db functions
@@ -226,7 +228,8 @@
     <title>Document</title> 
 </head>
 <body>
-    <h1> PANEL ADMINISTRACYJNY</h1><hr>
+    <h1> PANEL ADMINISTRACYJNY</h1>
+    <div id="logout_panel"><a href="./logout.php"><button>Wyloguj</button></a></div><hr>
     <?php //print_r($_SESSION); ?><br>
     <div id="explorer">
         <div id="table_listing">
@@ -257,7 +260,7 @@
     <div id="editor">
         <div id="editor-menu">
             <form method="POST"> <input type="hidden" name="operation_type" value="add"><input type="submit" value="Dodawanie danych"> </form>
-            <form method="POST"> <input type="hidden" name="operation_type" value="alter"><input type="submit" value="Zmiana danych"> </form>
+            <form method="POST" style="display:none"> <input type="hidden" name="operation_type" value="alter"><input type="submit" value="Zmiana danych"> </form>
         </div>
         <div id="editor-form">
             <?php
