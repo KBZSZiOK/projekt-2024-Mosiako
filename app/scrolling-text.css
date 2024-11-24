@@ -1,0 +1,25 @@
+#scrolling_text{
+    /* background-color: #111; */
+    text-align: start;
+    overflow: hidden;
+    *{
+        color: white;
+        position: relative;
+        width: fit-content;
+        animation-name: movement;
+        animation-duration: 20s;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+        
+        text-align: center;
+        overflow-wrap: break-word;
+        max-width: 50vw;
+        font-style: italic;
+        
+    }
+}
+
+@keyframes movement {
+    from {left: -50vw;}
+    to {left: 100vw;}
+  }

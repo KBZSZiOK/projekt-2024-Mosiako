@@ -1,0 +1,48 @@
+.film_entry_container,.session_entry_container{
+    margin: 1%;
+    background-color: #2222;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    div{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #2222;
+        *{
+            width: 30%;
+            text-align: center;
+            input[type="submit"]{
+                width: 80%;
+            }
+        }
+    }
+}
+
+#navigation_container{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    form{
+        width: auto;
+    }
+}
+
+@media only screen and (max-width: 800px){
+    .film_entry_container{
+        h3{
+            font-size: 6vw;
+        }
+        div{
+            margin: 1%;
+            *{
+                font-size: 3vw;
+                input[type="submit"]{
+                    font-size: 3vw;
+                    text-wrap: wrap;
+                }
+            }
+        }
+    }
+}

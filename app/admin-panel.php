@@ -5,10 +5,6 @@
 
     session_start();
     // Check if logged in
-    if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"]!==true){
-        header("Location: admin-login.php");
-        exit;
-    }
 
     if(isset($_POST["selected_table_listing"])){
         $_SESSION["selected_table_listing"]=$_POST["selected_table_listing"];
@@ -37,7 +33,7 @@
             //check validity of the data and add it into the query
             $recognized_data_types = 0;
             $query_to_send .= "(";
-            echo"<br> columns: ";print_r($columns); echo"<br>";
+            //echo"<br> columns: ";print_r($columns); echo"<br>";
             $i = 1;
             foreach ($_POST as $key => $value) {
                 if($key != "operation_sent" && isset($_POST[$key])){ // skip 1st element as its from operation_sent
@@ -62,7 +58,7 @@
             }
             $query_to_send = rtrim($query_to_send, ",");
             $query_to_send .= ");";
-            printf("%s  %.2f",count($columns)-1,$recognized_data_types);
+            //printf("%s  %.2f",count($columns)-1,$recognized_data_types);
             if (count($columns)-1 == $recognized_data_types){
                 //make query
                 //echo "query:        ".$query_to_send;
@@ -75,7 +71,7 @@
     //db functions
     function makeDBRequest($request){
         $result = [];
-        $db = new mysqli("localhost",$_SESSION["login"],$_SESSION["password"],"kino");
+        $db = new mysqli("localhost","admin","zaq1@WSX","kino");
         $query_result  = $db->query($request);
         if(!isset($query_result->num_rows)){
             return -1;
@@ -229,7 +225,7 @@
 </head>
 <body>
     <h1> PANEL ADMINISTRACYJNY</h1>
-    <div id="logout_panel"><a href="./logout.php"><button>Wyloguj</button></a></div><hr>
+    <div id="logout_panel"><a href="./logout.php"><button>Wyjście</button></a></div><hr>
     <?php //print_r($_SESSION); ?><br>
     <div id="explorer">
         <div id="table_listing">
